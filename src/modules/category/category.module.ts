@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { CategoryController } from "./category.controller";
 import { CategoryService } from "./category.service";
 import { PostgresService } from "src/database/db";
-import { FsHelper } from "src/helpers/fs.helper";
+import { FsHelper } from "src/helpers/fs.helper.single";
 
 @Module({
     imports: [],

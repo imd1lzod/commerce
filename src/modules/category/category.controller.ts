@@ -25,8 +25,9 @@ export class CategoryController {
     }
 
     @Put(':id')
-    async updateCategory(@Body() body: UpdateCategoryDto, @Param('id') id: number) {
-        return await this.categoryService.updateCategory({ name: body.name }, id)
+    @UseInterceptors(FileInterceptor('avatar'))
+    async updateCategory(@Body() body: UpdateCategoryDto, @Param('id') id: number, @UploadedFile(new FileSizeVaidationPipe) file: Express.Multer.File) {
+        return await this.categoryService.updateCategory({ name: body.name }, id, file)
     }
 
     @Delete(':id')

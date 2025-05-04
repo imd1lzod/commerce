@@ -3,7 +3,7 @@ import { PostgresService } from "src/database/db";
 import { CategoryTableModel } from "./models/category.model";
 import { CreateCategoryDto, UpdateCategoryDto } from "./interfaces/category.interface";
 import { GetAllCategoriesDto } from "./dtos/get-all-categories.dto";
-import { FsHelper } from "src/helpers/fs.helper";
+import { FsHelper } from "src/helpers/fs.helper.single";
 
 @Injectable()
 export class CategoryService implements OnModuleInit {
@@ -51,7 +51,9 @@ export class CategoryService implements OnModuleInit {
         }
     }
 
-    async updateCategory(payload: UpdateCategoryDto, id: number) {
+    async updateCategory(payload: UpdateCategoryDto, id: number, file: Express.Multer.File) {
+        await this.fs.uploadFile(file)
+
         const updatedCategory = await this.pg.query(
             `UPDATE categories SET name = $1 WHERE id = $2 RETURNING *`,
             [payload.name, id]

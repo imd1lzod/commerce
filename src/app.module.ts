@@ -9,16 +9,16 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/exception.filter';
 import { AllErrorHandler } from './filters/all-error.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
-import { FsHelper } from './helpers/fs.helper';
+import { OrderModule } from './modules/orders/order.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true
-  }), CategoryModule, ProductModule, UserModule],
-  providers: [PostgresService, 
+  }), CategoryModule, ProductModule, UserModule, OrderModule],
+  providers: [PostgresService,
     { provide: APP_FILTER, useClass: AllErrorHandler },
     { provide: APP_FILTER, useClass: HttpExceptionFilter },
-    { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor} 
+    { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }
   ]
 })
 export class AppModule {

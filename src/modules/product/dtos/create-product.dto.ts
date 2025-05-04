@@ -1,4 +1,5 @@
-import { IsInt, IsOptional, IsPositive, IsString,  MaxLength, MinLength } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsInt, IsOptional, IsPositive, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateProductDto {
     @IsString({ message: `Ism string bo'lishi kerak` })
@@ -6,10 +7,12 @@ export class CreateProductDto {
     @MaxLength(100, { message: "Maksimal uzunlik 100 ta belgi  bo'lishi kerak" })
     name: string
 
+    @Transform(({value}) => Number(value))
     @IsInt({ message: "Price number b'lishi kerak" })
     @IsPositive({ message: "Price musbat bo'lishi kerak" })
     price: number
-
+    
+    @Transform(({ value }) => Number(value))
     @IsInt({ message: "Id number b'lishi kerak" })
     @IsOptional()
     @IsPositive({ message: "Id musbat bo'lishi kerak" })

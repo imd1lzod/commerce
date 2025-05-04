@@ -3,10 +3,11 @@ import { PostgresService } from "src/database/db";
 import { CreateUserDto, UpdateUserDto, User, UserResponse } from "./interfaces/user.interface";
 import { UserModelTable } from "./models/user.model";
 import { GetAllUsersDto } from "./dtos/get-all-users.dto";
+import { FsHelper } from "src/helpers/fs.helper.single";
 
 @Injectable()
 export class UserService {
-    constructor(private pg: PostgresService) { }
+    constructor(private pg: PostgresService, private fs: FsHelper) { }
 
     async onModuleInit() {
         try {
@@ -73,8 +74,10 @@ export class UserService {
         };
     }
 
-    async updateUser(id: number, payload: UpdateUserDto): Promise<UserResponse> {
+    async updateUser(id: number, payload: UpdateUserDto, file: Express.Multer.File): Promise<UserResponse> {
         const { username, email } = payload;
+
+        await this.fs.uploadFile(file)
 
         const updatedUser = await this.pg.query(
             `UPDATE users SET username = $1, email = $2 WHERE id = $3 RETURNING *`,

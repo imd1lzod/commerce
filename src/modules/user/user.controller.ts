@@ -1,7 +1,8 @@
-import { Controller, Post, Get, Body, Param, Put, Delete, Query } from "@nestjs/common";
+import { Controller, Post, Get, Body, Param, Put, Delete, Query, UploadedFile } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto, UpdateUserDto, UserResponse } from "./interfaces/user.interface";
 import { GetAllUsersDto } from "./dtos/get-all-users.dto";
+import { FileSizeVaidationPipe } from "src/pipes/check-file-size";
 
 @Controller("users")
 export class UserController {
@@ -28,8 +29,8 @@ export class UserController {
     }
 
     @Put(":id")
-    async updateUser(@Param("id") id: number, @Body() body: UpdateUserDto): Promise<UserResponse> {
-        return await this.userService.updateUser(id, body);
+    async updateUser(@Param("id") id: number, @Body() body: UpdateUserDto, @UploadedFile(new FileSizeVaidationPipe) file: Express.Multer.File): Promise<UserResponse> {
+        return await this.userService.updateUser(id, body, file);
     }
 
     @Delete(":id")

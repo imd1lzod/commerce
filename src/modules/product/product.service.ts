@@ -3,10 +3,11 @@ import { PostgresService } from "src/database/db";
 import { ProductModelTable } from "./models/product.model";
 import { CreateProductDto, ProductResponse, UpdateProductDto } from "./interfaces/product.interface";
 import { GetAllProductsDto } from "./dtos/get-all-products.dto";
+import { FsHelperMulti } from "src/helpers/fs.helper.multi";
 
 @Injectable()
 export class ProductService implements OnModuleInit {
-    constructor(private pg: PostgresService) { }
+    constructor(private pg: PostgresService, private fs: FsHelperMulti) { }
 
     async onModuleInit() {
         try {
@@ -32,7 +33,8 @@ export class ProductService implements OnModuleInit {
         };
     }
 
-    async createProduct(payload: CreateProductDto): Promise<ProductResponse> {
+    async createProduct(payload: CreateProductDto, files: Express.Multer.File[]): Promise<ProductResponse> {
+        await this.fs.uploadFiles(files)
         const result = await this.pg.query(
             `INSERT INTO products(name, price, category_id) VALUES ($1, $2, $3) RETURNING *`,
             [payload.name, payload.price, payload.category_id]
